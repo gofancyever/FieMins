@@ -1,6 +1,6 @@
 
 from app import app
-from flask import request
+from flask import request,jsonify
 from app import models
 from app import db
 import json
@@ -16,9 +16,11 @@ def login():
 
 def getUser(uid):
     user = models.User.query.filter_by(uid='1').first()
+    result = models.user_schema.dump(user)
+    return jsonify(result.data)
     if not user is None:
-        jsonStr = json.dumps(user, default=lambda obj: obj.__dict__)
-        return json.dumps(user,default=lambda obj:obj.__dict__)
+        result = userSchema.dump(user)
+        return jsonify(result.data)
     else:
         return "404"
 
