@@ -3,10 +3,11 @@ from app import app
 from flask import request,jsonify
 from app import models
 from app import db
-import json
-from app.error_extension import OEError
 
+from app.error_extension import OEError
 from app import models
+
+''' Login '''
 @app.route('/login',methods=['GET','POST'])
 def login():
     uid = request.args.get('uid')
@@ -22,8 +23,24 @@ def login():
     else:
         return formatData(None,300,'arg error')
 
+'''register'''
+@app.route('/register',methods=['GET','POST'])
+def register():
+    name = request.args.get('name')
+    iconurl = request.args.get('iconurl')
+    uid = request.args.get('uid')
+    if verifyRegisterUser(name,uid):
+        user = models.User(name=name,iconurl=iconurl,uid=uid)
+        db.session.add(user)
+        db.session.commit()
+        return formatData(None, 200, 'success')
+    else:
+        return formatData(None,300,'arg error')
 
 
+# register must value verify
+def verifyRegisterUser(name,uid):
+    return name != None and uid !=None
 
 
 def getUserInfo(uid):

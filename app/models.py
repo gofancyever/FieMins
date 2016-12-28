@@ -10,11 +10,11 @@ class AppToken(db.Model):
     user_id = db.Column(db.String(80),db.ForeignKey('users.uid'))
     user = db.relationship('User',backref = db.backref('appTokens',lazy = 'dynamic'))
 
-    appType = db.Column(db.String(80), index=True, unique=True)
-    accessToken = db.Column(db.String(80), index=True, unique=True)
-    uid = db.Column(db.String(80), index=True, unique=True)
-    expiration = db.Column(db.String(80), index=True, unique=True)
-    openid = db.Column(db.String(80), index=True, unique=True)
+    appType = db.Column(db.String(80), index=True, unique=False)
+    accessToken = db.Column(db.String(80), index=True, unique=False)
+    uid = db.Column(db.String(80), index=True, unique=False)
+    expiration = db.Column(db.String(80), index=True, unique=False)
+    openid = db.Column(db.String(80), index=True, unique=False)
 
     def __repr__(self):
         return '<AppToken %r>' % self.appType
@@ -32,8 +32,8 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer,primary_key=True)
 
-    name = db.Column(db.String(80),index=True,unique=True)
-    iconurl = db.Column(db.String(80), index=True, unique=True)
+    name = db.Column(db.String(80),index=True,unique=False)
+    iconurl = db.Column(db.String(80), index=True, unique=False)
     uid = db.Column(db.String(80), index=True, unique=True)
 
     def __repr__(self):
