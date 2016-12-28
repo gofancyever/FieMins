@@ -1,15 +1,24 @@
 import json
 
+class OEError(Exception):
+    def __init__(self,code,msg):
+        self.code  = code
+        self.msg = msg
+    def __str__(self):
+        return repr(self.msg,self.code)
 
-class User():
-    def __init__(self, name, age, score):
-        self.name = name
-        self.age = age
-        self.score = score
 
-u = User('a',21,12)
+dictTest = {'user':{'a':1,'b':2}}
 
-d = dict(name='Bob', age=20, score=88)
-print u.name
 
-print json.dumps(u,default=lambda obj:obj.__dict__)
+e = None
+
+
+def error():
+    raise OEError(200,'error')
+try:
+    a = error()
+except OEError as e:
+    print(e.code)
+
+
