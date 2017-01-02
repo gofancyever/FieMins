@@ -18,29 +18,24 @@ def login():
             userInfoDict = {"userInfo":models.user_schema.dump(userInfo).data}
             appTokensDict = {"appToken":models.appTokens_schema.dump(appTokens).data}
             return formatData([userInfoDict,appTokensDict],'200','success')
-        except OEError as e:
-            return formatData(None,e.code,e.msg)
-    else:
-        return formatData(None,300,'arg error')
+        except OEError as e: # no found user
+            name = request.args.get('uid')
+            iconurl = request.args.get('iconurl')
+            user = models.User(name = name,iconurl = iconurl,uid = uid)
+            register(user)
+            appTokens = getAppTokens(user)
+            appTokensDict = {"appToken": models.appTokens_schema.dump(appTokens).data}
+            userInfoDict = {"userInfo": models.user_schema.dump(userInfo).data}
+            return formatData([userInfoDict, appTokensDict], '200', 'success')
 
-'''register'''
-@app.route('/register',methods=['GET','POST'])
-def register():
-    name = request.args.get('name')
-    iconurl = request.args.get('iconurl')
-    uid = request.args.get('uid')
-    if verifyRegisterUser(name,uid):
-        user = models.User(name=name,iconurl=iconurl,uid=uid)
-        db.session.add(user)
-        db.session.commit()
-        return formatData(None, 200, 'success')
     else:
         return formatData(None,300,'arg error')
 
 
-# register must value verify
-def verifyRegisterUser(name,uid):
-    return name != None and uid !=None
+
+def register(user):
+    db.session.add(user)
+    db.session.commit()
 
 
 def getUserInfo(uid):
